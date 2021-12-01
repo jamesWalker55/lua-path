@@ -120,3 +120,11 @@ test.strings(path.normpath('//machine/share//a/b'), '\\\\machine\\share\\a\\b')
 
 test.strings(path.normpath('\\\\.\\NUL'), '\\\\.\\NUL')
 test.strings(path.normpath('\\\\?\\D:/XY\\Z'), '\\\\?\\D:/XY\\Z')
+
+
+-- test_isabs
+test.bool(path.isabs("c:\\"), true)
+test.bool(path.isabs("\\\\conky\\mountpoint\\"), true)
+test.bool(path.isabs("\\foo"), true)
+test.bool(path.isabs("\\foo\\bar"), true)
+
