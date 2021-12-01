@@ -1,4 +1,4 @@
-local path = require "pathnt"
+local path = require "ntpath"
 local test = require "test"
 
 

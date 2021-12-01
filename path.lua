@@ -14,7 +14,7 @@ else
 end
 
 if is_windows then
-  return require "pathnt"
+  return require "ntpath"
 else
   return require "pathnx"
 end
