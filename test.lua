@@ -1,6 +1,11 @@
 local module = {}
 
 
+function module.bool(a, b)
+  assert(a == b, ("Bools are different: %s ~= %s"):format(a, b))
+end
+
+
 function module.strings(a, b)
   assert(a == b, ("Strings are different: '%s' ~= '%s'"):format(a, b))
 end
