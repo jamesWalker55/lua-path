@@ -1,10 +1,16 @@
 -- port of os.path for Windows
 
 local util = require "util"
+local common = require "pathcommon"
 
 local contains = util.contains
 
 local module = {}
+
+
+function module.splitext(p)
+  return common.splitext(p, '\\', '/', '.')
+end
 
 
 --- @param path string
