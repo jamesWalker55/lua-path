@@ -1,6 +1,11 @@
 -- port of os.path for Windows
 
+local util = require "util"
+
+local contains = util.contains
+
 local module = {}
+
 
 --- @param path string
 function module.splitdrive(path)
@@ -34,6 +39,7 @@ function module.splitdrive(path)
   return "", path
 end
 
+
 function module.join(path, ...)
   local paths = { ... }
 
@@ -44,7 +50,7 @@ function module.join(path, ...)
   -- iterate for 2nd path onwards
   for _, p in ipairs(paths) do
     local p_drive, p_path = module.splitdrive(p)
-    if #p_path > 0 and (p_path:sub(1, 1) == "\\" or p_path:sub(1, 1) == "/") then
+    if #p_path > 0 and contains(p_path:sub(1, 1), {"\\", "/"}) then
       -- second path is absolute
       if #p_drive > 0 or #result_drive == 0 then result_drive = p_drive end
 
@@ -61,7 +67,7 @@ function module.join(path, ...)
       result_drive = p_drive
     end
     -- Second path is relative to the first
-    if #result_path > 0 and (result_path:sub(-1, -1) ~= "\\" or result_path:sub(-1, -1) ~= "/") then
+    if #result_path > 0 and not contains(result_path:sub(-1, -1), {"\\", "/"}) then
       result_path = result_path .. "\\"
     end
     result_path = result_path .. p_path
