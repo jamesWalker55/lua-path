@@ -1,8 +1,18 @@
 {
-	"folders":
-	[
+	"folders": [
 		{
-			"path": "."
+			"path": ".",
 		}
-	]
+	],
+	"settings": {
+		"LSP": {
+			"LSP-lua": {
+				"settings": {
+					"Lua.diagnostics.globals": [
+						"pandoc"
+					]
+				}
+			}
+		}
+	},
 }
