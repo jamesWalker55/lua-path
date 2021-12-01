@@ -49,8 +49,6 @@ end
 function module.join(path, ...)
   local paths = { ... }
 
-  assert(#paths >= 1, "At least 1 path must be given as input")
-
   local result_drive, result_path = module.splitdrive(path)
 
   -- iterate for 2nd path onwards
