@@ -1,6 +1,11 @@
 local module = {}
 
 
+function module.strings(a, b)
+  assert(a == b, ("Strings are different: '%s' ~= '%s'"):format(a, b))
+end
+
+
 function module.lists(a, b)
   assert(#a == #b, ("Tables have different length: %s ~= %s"):format(#a, #b))
   for i=1,#a do
