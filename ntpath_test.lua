@@ -92,3 +92,31 @@ test.strings(path.join('\\\\computer\\share', 'a\\b'), '\\\\computer\\share\\a\\
 test.strings(path.join('//computer/share/', 'a', 'b'), '//computer/share/a\\b')
 test.strings(path.join('//computer/share', 'a', 'b'), '//computer/share\\a\\b')
 test.strings(path.join('//computer/share', 'a/b'), '//computer/share\\a/b')
+
+
+-- test_normpath
+test.strings(path.normpath('A//////././//.//B'), 'A\\B')
+test.strings(path.normpath('A/./B'), 'A\\B')
+test.strings(path.normpath('A/foo/../B'), 'A\\B')
+test.strings(path.normpath('C:A//B'), 'C:A\\B')
+test.strings(path.normpath('D:A/./B'), 'D:A\\B')
+test.strings(path.normpath('e:A/foo/../B'), 'e:A\\B')
+
+test.strings(path.normpath('C:///A//B'), 'C:\\A\\B')
+test.strings(path.normpath('D:///A/./B'), 'D:\\A\\B')
+test.strings(path.normpath('e:///A/foo/../B'), 'e:\\A\\B')
+
+test.strings(path.normpath('..'), '..')
+test.strings(path.normpath('.'), '.')
+test.strings(path.normpath(''), '.')
+test.strings(path.normpath('/'), '\\')
+test.strings(path.normpath('c:/'), 'c:\\')
+test.strings(path.normpath('/../.././..'), '\\')
+test.strings(path.normpath('c:/../../..'), 'c:\\')
+test.strings(path.normpath('../.././..'), '..\\..\\..')
+test.strings(path.normpath('K:../.././..'), 'K:..\\..\\..')
+test.strings(path.normpath('C:////a/b'), 'C:\\a\\b')
+test.strings(path.normpath('//machine/share//a/b'), '\\\\machine\\share\\a\\b')
+
+test.strings(path.normpath('\\\\.\\NUL'), '\\\\.\\NUL')
+test.strings(path.normpath('\\\\?\\D:/XY\\Z'), '\\\\?\\D:/XY\\Z')
