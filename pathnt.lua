@@ -80,7 +80,7 @@ function module.join(path, ...)
   -- add separator between UNC and non-absolute path
   if
     #result_path > 0
-    and (result_path:sub(0, 0) ~= "\\" or result_path:sub(0, 0) ~= "/")
+    and not contains(result_path:sub(1, 1), {"\\", "/"})
     and #result_drive > 0
     and result_drive:sub(-1, -1) ~= ":"
   then
