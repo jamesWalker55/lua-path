@@ -163,3 +163,12 @@ test.strings(path.relpath("/", "/"), '.')
 test.strings(path.relpath("/a", "/a"), '.')
 test.strings(path.relpath("/a/b", "/a/b"), '.')
 test.strings(path.relpath("c:/foo", "C:/FOO"), '.')
+
+
+-- test_split
+test.lists({path.split("c:\\foo\\bar")}, {'c:\\foo', 'bar'})
+test.lists({path.split("\\\\conky\\mountpoint\\foo\\bar")}, {'\\\\conky\\mountpoint\\foo', 'bar'})
+test.lists({path.split("c:\\")}, {'c:\\', ''})
+test.lists({path.split("\\\\conky\\mountpoint\\")}, {'\\\\conky\\mountpoint\\', ''})
+test.lists({path.split("c:/")}, {'c:/', ''})
+test.lists({path.split("//conky/mountpoint/")}, {'//conky/mountpoint/', ''})
