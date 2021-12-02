@@ -29,6 +29,4 @@ function module.join(a, ...)
   return path
 end
 
-print(module.join("c\\windows", "//test", "hi"))
-
 return module
