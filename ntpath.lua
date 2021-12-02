@@ -166,6 +166,13 @@ function module.getcwd()
 end
 
 
+--- Fake getcwd for testing
+--- Just uncomment this function while testing
+function module.getcwd()
+  return [[D:\Programming\lua-path]]
+end
+
+
 --- Return an absolute path.
 --- @param path string
 function module.abspath(path)
