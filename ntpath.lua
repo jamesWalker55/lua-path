@@ -176,16 +176,5 @@ function module.abspath(path)
   return module.normpath(path)
 end
 
-print(module.join("c:/windows", "test", "hi"))
-print(module.isabs("c:/windows"))
-print(module.isabs("c:windows"))
-print(debug.getinfo(1).short_src)
-print(debug.getinfo(1).source)
-print(module.normpath([[A//B]]))
-print(module.normpath([[A/./B]]))
-print(module.normpath([[A/foo/../B]]))
-print(module.normpath([[A\B]]))
-print(module.abspath([[A\B/../..]]))
-print(module.abspath([[A\B/../../..]]))
 
 return module
