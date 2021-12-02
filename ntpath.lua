@@ -1,7 +1,7 @@
 -- port of os.path for Windows
 
 local util = require("util")
-local common = require("pathcommon")
+local common = require("genericpath")
 
 local contains = util.contains
 
