@@ -165,6 +165,7 @@ function module.getcwd()
   return pandoc.system.get_working_directory()
 end
 
+
 --- Return an absolute path.
 --- @param path string
 function module.abspath(path)
