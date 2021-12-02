@@ -139,3 +139,27 @@ test.strings(path.abspath("?"), cwd_dir .. "\\?")
 -- -- disable this test, this depends on a python-only function
 -- local drive, _ = path.splitdrive(cwd_dir)
 -- test.strings(path.abspath("/abc/"), drive .. "\\abc")
+
+
+-- test_relpath
+test.strings(path.relpath("a"), 'a')
+test.strings(path.relpath(path.abspath("a")), 'a')
+test.strings(path.relpath("a/b"), 'a\\b')
+test.strings(path.relpath("../a/b"), '..\\a\\b')
+local currentdir = [[lua-path]]
+test.strings(path.relpath("a", "../b"), '..\\'..currentdir..'\\a')
+test.strings(path.relpath("a/b", "../c"), '..\\'..currentdir..'\\a\\b')
+test.strings(path.relpath("a", "b/c"), '..\\..\\a')
+test.strings(path.relpath("c:/foo/bar/bat", "c:/x/y"), '..\\..\\foo\\bar\\bat')
+test.strings(path.relpath("//conky/mountpoint/a", "//conky/mountpoint/b/c"), '..\\..\\a')
+test.strings(path.relpath("a", "a"), '.')
+test.strings(path.relpath("/foo/bar/bat", "/x/y/z"), '..\\..\\..\\foo\\bar\\bat')
+test.strings(path.relpath("/foo/bar/bat", "/foo/bar"), 'bat')
+test.strings(path.relpath("/foo/bar/bat", "/"), 'foo\\bar\\bat')
+test.strings(path.relpath("/", "/foo/bar/bat"), '..\\..\\..')
+test.strings(path.relpath("/foo/bar/bat", "/x"), '..\\foo\\bar\\bat')
+test.strings(path.relpath("/x", "/foo/bar/bat"), '..\\..\\..\\x')
+test.strings(path.relpath("/", "/"), '.')
+test.strings(path.relpath("/a", "/a"), '.')
+test.strings(path.relpath("/a/b", "/a/b"), '.')
+test.strings(path.relpath("c:/foo", "C:/FOO"), '.')
