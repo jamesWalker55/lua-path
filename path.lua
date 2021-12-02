@@ -16,5 +16,5 @@ end
 if is_windows then
   return require("ntpath")
 else
-  return require("pathnx")
+  return require("posixpath")
 end
