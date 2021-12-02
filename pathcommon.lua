@@ -1,19 +1,18 @@
 local module = {}
 
-
 function module.splitext(p, sep, altsep, extsep)
-  for i, x in ipairs({sep, altsep, extsep}) do
+  for i, x in ipairs({ sep, altsep, extsep }) do
     assert(#x == 1, "Input separator must be a single char")
   end
 
-  local sepIndex = ({p:find(".*%" .. sep)})[2] or 0
+  local sepIndex = ({ p:find(".*%" .. sep) })[2] or 0
 
   if altsep ~= nil then
-    local altsepIndex = ({p:find(".*%" .. altsep)})[2] or 0
+    local altsepIndex = ({ p:find(".*%" .. altsep) })[2] or 0
     sepIndex = math.max(sepIndex, altsepIndex)
   end
 
-  local dotIndex = ({p:find(".*%" .. extsep)})[2] or 0
+  local dotIndex = ({ p:find(".*%" .. extsep) })[2] or 0
   if dotIndex > sepIndex then
     -- skip all leading dots
     local filenameIndex = sepIndex + 1
@@ -27,6 +26,5 @@ function module.splitext(p, sep, altsep, extsep)
 
   return p, ""
 end
-
 
 return module

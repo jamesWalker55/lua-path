@@ -1,17 +1,15 @@
 -- port of os.path for Windows
 
-local util = require "util"
-local common = require "pathcommon"
+local util = require("util")
+local common = require("pathcommon")
 
 local contains = util.contains
 
 local module = {}
 
-
 function module.splitext(p)
-  return common.splitext(p, '\\', '/', '.')
+  return common.splitext(p, "\\", "/", ".")
 end
-
 
 --- @param path string
 function module.splitdrive(path)
@@ -26,11 +24,15 @@ function module.splitdrive(path)
       --                     |---directory----|
 
       local first_sep = npath:find("\\", 3)
-      if first_sep == nil then return "", path end
+      if first_sep == nil then
+        return "", path
+      end
 
       -- a UNC path can't have 2 slashes in a row (other than the first two)
       local second_sep = npath:find("\\", first_sep + 1)
-      if second_sep == first_sep + 1 then return "", path end
+      if second_sep == first_sep + 1 then
+        return "", path
+      end
 
       if second_sep == nil then
         return path, ""
@@ -39,12 +41,13 @@ function module.splitdrive(path)
       end
     end
 
-    if path:sub(2, 2) == ":" then return path:sub(1, 2), path:sub(3) end
+    if path:sub(2, 2) == ":" then
+      return path:sub(1, 2), path:sub(3)
+    end
   end
 
   return "", path
 end
-
 
 function module.join(path, ...)
   local paths = { ... }
@@ -54,9 +57,11 @@ function module.join(path, ...)
   -- iterate for 2nd path onwards
   for _, p in ipairs(paths) do
     local p_drive, p_path = module.splitdrive(p)
-    if #p_path > 0 and contains(p_path:sub(1, 1), {"\\", "/"}) then
+    if #p_path > 0 and contains(p_path:sub(1, 1), { "\\", "/" }) then
       -- second path is absolute
-      if #p_drive > 0 or #result_drive == 0 then result_drive = p_drive end
+      if #p_drive > 0 or #result_drive == 0 then
+        result_drive = p_drive
+      end
 
       result_path = p_path
       goto continue
@@ -71,16 +76,16 @@ function module.join(path, ...)
       result_drive = p_drive
     end
     -- Second path is relative to the first
-    if #result_path > 0 and not contains(result_path:sub(-1, -1), {"\\", "/"}) then
+    if #result_path > 0 and not contains(result_path:sub(-1, -1), { "\\", "/" }) then
       result_path = result_path .. "\\"
     end
     result_path = result_path .. p_path
-    ::continue:: ;
+    ::continue::
   end
   -- add separator between UNC and non-absolute path
   if
     #result_path > 0
-    and not contains(result_path:sub(1, 1), {"\\", "/"})
+    and not contains(result_path:sub(1, 1), { "\\", "/" })
     and #result_drive > 0
     and result_drive:sub(-1, -1) ~= ":"
   then
@@ -90,15 +95,13 @@ function module.join(path, ...)
   return result_drive .. result_path
 end
 
-
-
 -- Normalize a path, e.g. A//B, A/./B and A/foo/../B all become A\B.
 -- Previously, this function also truncated pathnames to 8+3 format,
 -- but as this module is called "ntpath", that's obviously wrong!
 
 --- Normalize path, eliminating double slashes, etc.
 function module.normpath(path)
-  if contains(path:sub(1, 4), {[[\\.\]], [[\\?\]]}) then
+  if contains(path:sub(1, 4), { [[\\.\]], [[\\?\]] }) then
     -- in the case of paths with these prefixes:
     -- \\.\ -> device names
     -- \\?\ -> literal paths
@@ -111,10 +114,10 @@ function module.normpath(path)
   local prefix, path = module.splitdrive(path)
 
   -- collapse initial backslashes
-  if path:sub(1,1) == "\\" then
+  if path:sub(1, 1) == "\\" then
     prefix = prefix .. "\\"
 
-    path = ({path:gsub("^\\+", "")})[1]
+    path = ({ path:gsub("^\\+", "") })[1]
   end
 
   -- split by separator into list
@@ -124,7 +127,7 @@ function module.normpath(path)
     if #comps[i] == 0 or comps[i] == "." then
       table.remove(comps, i)
     elseif comps[i] == ".." then
-      if i > 1 and comps[i-1] ~= ".." then
+      if i > 1 and comps[i - 1] ~= ".." then
         for _ = 0, 1 do -- do twice
           table.remove(comps, i - 1)
         end
@@ -145,7 +148,6 @@ function module.normpath(path)
   return prefix .. table.concat(comps, "\\")
 end
 
-
 --- Split a pathname.
 --- Return tuple (head, tail) where tail is everything after the final slash.
 --- Either part may be empty.
@@ -154,28 +156,28 @@ function module.split(p)
   local d, p = module.splitdrive(p)
   -- set i to index beyond p's last slash
   local i = #p + 1
-  while i ~= 1 and not contains(p:sub(i - 1, i - 1), {"/", "\\"}) do
+  while i ~= 1 and not contains(p:sub(i - 1, i - 1), { "/", "\\" }) do
     i = i - 1
   end
-  local head, tail = p:sub(1, i - 1), p:sub(i)  -- now tail has no slashes
+  local head, tail = p:sub(1, i - 1), p:sub(i) -- now tail has no slashes
   -- remove trailing slashes from head, unless it's all slashes
   -- https://stackoverflow.com/questions/17386792/how-to-implement-string-rfind-in-lua
-  head = head:match('(.*[^/\\])(.*)') or head
+  head = head:match("(.*[^/\\])(.*)") or head
   return d .. head, tail
 end
-
 
 --- Test whether a path is absolute
 --- @param path string
 function module.isabs(path)
   -- Paths beginning with \\?\ are always absolute, but do not necessarily contain a drive.
   local ABS_PATTERN = [[\\?\]]
-  if path:gsub('/', '\\'):sub(1, 4) == ABS_PATTERN then return true end
+  if path:gsub("/", "\\"):sub(1, 4) == ABS_PATTERN then
+    return true
+  end
 
   _, path = module.splitdrive(path)
-  return #path > 0 and contains(path:sub(1, 1), {"/", "\\"})
+  return #path > 0 and contains(path:sub(1, 1), { "/", "\\" })
 end
-
 
 --- Get the current working directory
 --- There is no native function to do this, you MUST use an external library for this
@@ -184,13 +186,11 @@ function module.getcwd()
   return pandoc.system.get_working_directory()
 end
 
-
 -- --- Fake getcwd for testing
 -- --- Just uncomment this function while testing
 -- function module.getcwd()
 --   return [[D:\Programming\lua-path]]
 -- end
-
 
 --- Return an absolute path.
 --- @param path string
@@ -202,7 +202,6 @@ function module.abspath(path)
   return module.normpath(path)
 end
 
-
 --- Normalize case of pathname.
 --- Makes all characters lowercase and all slashes into backslashes.
 --- @param s string
@@ -210,11 +209,10 @@ function module.normcase(s)
   return s:gsub("/", "\\"):lower()
 end
 
-
 --- Return a relative version of a path
 function module.relpath(path, start)
   if start == nil then
-    start = '.'
+    start = "."
   end
 
   local start_abs = module.abspath(module.normpath(start))
@@ -249,21 +247,19 @@ function module.relpath(path, start)
   end
 
   local rel_list = {}
-  -- rel_list = [pardir] * (len(start_list)-i) + path_list[i:]
-  for j=1, #start_list - i + 1 do
-    rel_list[j] = '..'
+  for j = 1, #start_list - i + 1 do
+    rel_list[j] = ".."
   end
   local j = #rel_list + 1
-  for k=i, #path_list do
+  for k = i, #path_list do
     rel_list[j] = path_list[k]
     j = j + 1
   end
 
   if #rel_list == 0 then
-    return '.'
+    return "."
   end
   return module.join(table.unpack(rel_list))
 end
-
 
 return module
