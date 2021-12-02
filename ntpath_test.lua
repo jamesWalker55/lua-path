@@ -128,3 +128,14 @@ test.bool(path.isabs("\\\\conky\\mountpoint\\"), true)
 test.bool(path.isabs("\\foo"), true)
 test.bool(path.isabs("\\foo\\bar"), true)
 
+
+-- test_abspath
+test.strings(path.abspath("C:\\"), "C:\\")
+local cwd_dir = [[D:\Programming\lua-path]]
+-- with support.temp_cwd(support.TESTFN) as cwd_dir: -- bpo-31047
+test.strings(path.abspath(""), cwd_dir)
+test.strings(path.abspath(" "), cwd_dir .. "\\ ")
+test.strings(path.abspath("?"), cwd_dir .. "\\?")
+-- -- disable this test, this depends on a python-only function
+-- local drive, _ = path.splitdrive(cwd_dir)
+-- test.strings(path.abspath("/abc/"), drive .. "\\abc")
