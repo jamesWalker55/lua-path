@@ -1,5 +1,7 @@
 -- port of os.path for Linux-based systems
 
+local common = require("genericpath")
+
 local module = {}
 
 --- Split a pathname into drive and path. On Posix, drive is always empty.
@@ -27,6 +29,14 @@ function module.join(a, ...)
     end
   end
   return path
+end
+
+--- Split a path in root and extension.
+--- The extension is everything starting at the last dot in the last
+--- pathname component; the root is everything before that.
+--- It is always true that root + ext == p.
+function module.splitext(p)
+  return common.splitext(p, "/", nil, ".")
 end
 
 return module
