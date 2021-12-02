@@ -146,6 +146,25 @@ function module.normpath(path)
 end
 
 
+--- Split a pathname.
+--- Return tuple (head, tail) where tail is everything after the final slash.
+--- Either part may be empty.
+--- @param p string
+function module.split(p)
+  local d, p = module.splitdrive(p)
+  -- set i to index beyond p's last slash
+  local i = #p + 1
+  while i ~= 1 and not contains(p:sub(i - 1, i - 1), {"/", "\\"}) do
+    i = i - 1
+  end
+  local head, tail = p:sub(1, i - 1), p:sub(i)  -- now tail has no slashes
+  -- remove trailing slashes from head, unless it's all slashes
+  -- https://stackoverflow.com/questions/17386792/how-to-implement-string-rfind-in-lua
+  head = head:match('(.*[^/\\])(.*)') or head
+  return d .. head, tail
+end
+
+
 --- Test whether a path is absolute
 --- @param path string
 function module.isabs(path)
