@@ -184,4 +184,67 @@ function module.abspath(path)
 end
 
 
+--- Normalize case of pathname.
+--- Makes all characters lowercase and all slashes into backslashes.
+--- @param s string
+function module.normcase(s)
+  return s:gsub("/", "\\"):lower()
+end
+
+
+--- Return a relative version of a path
+function module.relpath(path, start)
+  if start == nil then
+    start = '.'
+  end
+
+  local start_abs = module.abspath(module.normpath(start))
+  local path_abs = module.abspath(module.normpath(path))
+  local start_drive, start_rest = module.splitdrive(start_abs)
+  local path_drive, path_rest = module.splitdrive(path_abs)
+  if module.normcase(start_drive) ~= module.normcase(path_drive) then
+    return nil, ("path is on mount %r, start on mount %r"):format(path_drive, start_drive)
+  end
+
+  local start_list = {}
+  for _, p in ipairs(util.split(start_rest, "[^\\]*")) do
+    if #p > 0 then
+      table.insert(start_list, p)
+    end
+  end
+
+  local path_list = {}
+  for _, p in ipairs(util.split(path_rest, "[^\\]*")) do
+    if #p > 0 then
+      table.insert(path_list, p)
+    end
+  end
+
+  -- Work out how much of the filepath is shared by start and path.
+  local i = 1
+  for k = 1, math.min(#start_list, #path_list) do
+    if module.normcase(start_list[k]) ~= module.normcase(path_list[k]) then
+      break
+    end
+    i = k + 1
+  end
+
+  local rel_list = {}
+  -- rel_list = [pardir] * (len(start_list)-i) + path_list[i:]
+  for j=1, #start_list - i + 1 do
+    rel_list[j] = '..'
+  end
+  local j = #rel_list + 1
+  for k=i, #path_list do
+    rel_list[j] = path_list[k]
+    j = j + 1
+  end
+
+  if #rel_list == 0 then
+    return '.'
+  end
+  return module.join(table.unpack(rel_list))
+end
+
+
 return module
