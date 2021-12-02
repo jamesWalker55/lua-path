@@ -18,9 +18,11 @@ end
 -- splits 'str' into pieces matching 'pat', returns them as an array
 -- the following minimalistic splitting function now is a true inverse of table.concat
 function module.split(str, pat)
-   local tbl = {}
-   str:gsub(pat, function(x) tbl[#tbl+1] = x end)
-   return tbl
+  local tbl = {}
+  str:gsub(pat, function(x)
+    tbl[#tbl + 1] = x
+  end)
+  return tbl
 end
 
 return module
