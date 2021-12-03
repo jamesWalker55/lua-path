@@ -31,5 +31,16 @@ function test_splitext()
   splitextTest("", "", "")
 end
 
+function test_normpath()
+  test.strings(path.normpath(""), ".")
+  test.strings(path.normpath("/"), "/")
+  test.strings(path.normpath("//"), "//")
+  test.strings(path.normpath("///"), "/")
+  test.strings(path.normpath("///foo/.//bar//"), "/foo/bar")
+  test.strings(path.normpath("///foo/.//bar//.//..//.//baz"), "/foo/baz")
+  test.strings(path.normpath("///..//./foo/.//bar"), "/foo/bar")
+end
+
 test_join()
 test_splitext()
+test_normpath()
