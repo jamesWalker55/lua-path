@@ -1,7 +1,7 @@
 -- port of os.path for Linux-based systems
 
-local util = require("util")
-local common = require("genericpath")
+local util = require("lua-path.util")
+local common = require("lua-path.genericpath")
 
 local getcwd = common.getcwd
 local contains = util.contains

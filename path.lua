@@ -14,7 +14,7 @@ else
 end
 
 if is_windows then
-  return require("ntpath")
+  return require("lua-path.ntpath")
 else
-  return require("posixpath")
+  return require("lua-path.posixpath")
 end

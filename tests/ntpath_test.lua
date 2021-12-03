@@ -1,15 +1,13 @@
-package.path = package.path .. ";../lib/?.lua"
-
 -- override current directory function for testing
-local genericpath = require("genericpath")
+local genericpath = require("lua-path.genericpath")
 local cwd_path = [[D:\Programming\lua-path]]
 local cwd_dir = [[lua-path]]
 genericpath.getcwd = function()
   return cwd_path
 end
 
-local path = require("ntpath")
-local test = require("test")
+local path = require("lua-path.ntpath")
+local test = require("lua-path.test")
 
 function test_splitext()
   test.lists({ path.splitext("foo.ext") }, { "foo", ".ext" })

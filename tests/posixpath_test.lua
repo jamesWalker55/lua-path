@@ -1,15 +1,13 @@
-package.path = package.path .. ";../lib/?.lua"
-
 -- override current directory function for testing
-local genericpath = require("genericpath")
+local genericpath = require("lua-path.genericpath")
 local cwd_path = [[/home/user/bar]]
 local cwd_dir = [[bar]]
 genericpath.getcwd = function()
   return cwd_path
 end
 
-local path = require("posixpath")
-local test = require("test")
+local path = require("lua-path.posixpath")
+local test = require("lua-path.test")
 
 function test_join()
   test.strings(path.join("/foo", "bar", "/bar", "baz"), "/bar/baz")
