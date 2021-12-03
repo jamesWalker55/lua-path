@@ -94,4 +94,29 @@ function module.normpath(path)
   end
 end
 
+-- Split a path in head (everything up to the last '/') and tail (the
+-- rest).  If the path ends in '/', tail will be empty.  If there is no
+-- '/' in the path, head  will be empty.
+-- Trailing '/'es are stripped from head unless it is the root.
+
+--- Split a pathname.  Returns tuple "(head, tail)" where "tail" is
+--- everything after the final slash.  Either part may be empty.
+--- @param p string
+function module.split(p)
+  local sep_pos = ({ p:find(".*/") })[2] or 0
+  local head, tail = p:sub(1, sep_pos), p:sub(sep_pos + 1)
+  if #head > 0 and head ~= ("/"):rep(#head) then
+    -- head = head.rstrip(sep)
+    local stop = #head
+    for i = #head, 1, -1 do
+      if head:sub(i, i) ~= "/" then
+        break
+      end
+      stop = i - 1
+    end
+    head = head:sub(1, stop)
+  end
+  return head, tail
+end
+
 return module

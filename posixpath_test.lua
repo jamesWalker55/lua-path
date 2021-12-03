@@ -41,6 +41,15 @@ function test_normpath()
   test.strings(path.normpath("///..//./foo/.//bar"), "/foo/bar")
 end
 
+function test_split()
+  test.lists({ path.split("/foo/bar") }, { "/foo", "bar" })
+  test.lists({ path.split("/") }, { "/", "" })
+  test.lists({ path.split("foo") }, { "", "foo" })
+  test.lists({ path.split("////foo") }, { "////", "foo" })
+  test.lists({ path.split("//foo//bar") }, { "//foo", "bar" })
+end
+
 test_join()
 test_splitext()
 test_normpath()
+test_split()
