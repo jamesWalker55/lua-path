@@ -162,7 +162,7 @@ function module.split(p)
   local head, tail = p:sub(1, i - 1), p:sub(i) -- now tail has no slashes
   -- remove trailing slashes from head, unless it's all slashes
   -- https://stackoverflow.com/questions/17386792/how-to-implement-string-rfind-in-lua
-  head = head:match("(.*[^/\\])(.*)") or head
+  head = head:match("(.*[^/\\])") or head
   return d .. head, tail
 end
 
