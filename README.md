@@ -3,7 +3,7 @@
 This is a partial port of Python's `os.path` module to Lua, **for usage in Pandoc filters**. This should work in any system.
 
 ```lua
--- running on windows
+-- running on windows, linux is supported too
 -- working directory is D:\foo\bar
 
 local path = require("path")
