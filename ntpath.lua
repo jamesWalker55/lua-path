@@ -199,6 +199,10 @@ end
 
 --- Return a relative version of a path
 function module.relpath(path, start)
+  if #path == 0 then
+    return nil, "Given path is empty!"
+  end
+
   if start == nil then
     start = "."
   end
