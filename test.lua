@@ -15,4 +15,8 @@ function module.lists(a, b)
   end
 end
 
+function module.equal(a, b)
+  assert(a == b, ("Objects are different: %s ~= %s"):format(a, b))
+end
+
 return module
