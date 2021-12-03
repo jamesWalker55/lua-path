@@ -119,4 +119,12 @@ function module.split(p)
   return head, tail
 end
 
+-- Return whether a path is absolute.
+-- Trivial in Posix, harder on the Mac or MS-DOS.
+
+--- Test whether a path is absolute
+function module.isabs(s)
+  return s:sub(1, 1) == "/"
+end
+
 return module

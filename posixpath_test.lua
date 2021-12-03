@@ -49,7 +49,16 @@ function test_split()
   test.lists({ path.split("//foo//bar") }, { "//foo", "bar" })
 end
 
+function test_isabs()
+  test.bool(path.isabs(""), false)
+  test.bool(path.isabs("/"), true)
+  test.bool(path.isabs("/foo"), true)
+  test.bool(path.isabs("/foo/bar"), true)
+  test.bool(path.isabs("foo/bar"), false)
+end
+
 test_join()
 test_splitext()
 test_normpath()
 test_split()
+test_isabs()
