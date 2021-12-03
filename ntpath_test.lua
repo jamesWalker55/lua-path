@@ -1,3 +1,11 @@
+-- override current directory function for testing
+local genericpath = require("genericpath")
+local cwd_path = [[D:\Programming\lua-path]]
+local cwd_dir = [[lua-path]]
+genericpath.getcwd = function()
+  return cwd_path
+end
+
 local path = require("ntpath")
 local test = require("test")
 
@@ -141,13 +149,12 @@ end
 
 function test_abspath()
   test.strings(path.abspath("C:\\"), "C:\\")
-  local cwd_dir = [[D:\Programming\lua-path]]
-  -- with support.temp_cwd(support.TESTFN) as cwd_dir: -- bpo-31047
-  test.strings(path.abspath(""), cwd_dir)
-  test.strings(path.abspath(" "), cwd_dir .. "\\ ")
-  test.strings(path.abspath("?"), cwd_dir .. "\\?")
+  -- with support.temp_cwd(support.TESTFN) as cwd_path: -- bpo-31047
+  test.strings(path.abspath(""), cwd_path)
+  test.strings(path.abspath(" "), cwd_path .. "\\ ")
+  test.strings(path.abspath("?"), cwd_path .. "\\?")
   -- -- disable this test, this depends on a python-only function
-  -- local drive, _ = path.splitdrive(cwd_dir)
+  -- local drive, _ = path.splitdrive(cwd_path)
   -- test.strings(path.abspath("/abc/"), drive .. "\\abc")
 end
 
@@ -156,9 +163,8 @@ function test_relpath()
   test.strings(path.relpath(path.abspath("a")), "a")
   test.strings(path.relpath("a/b"), "a\\b")
   test.strings(path.relpath("../a/b"), "..\\a\\b")
-  local currentdir = [[lua-path]]
-  test.strings(path.relpath("a", "../b"), "..\\" .. currentdir .. "\\a")
-  test.strings(path.relpath("a/b", "../c"), "..\\" .. currentdir .. "\\a\\b")
+  test.strings(path.relpath("a", "../b"), "..\\" .. cwd_dir .. "\\a")
+  test.strings(path.relpath("a/b", "../c"), "..\\" .. cwd_dir .. "\\a\\b")
   test.strings(path.relpath("a", "b/c"), "..\\..\\a")
   test.strings(path.relpath("c:/foo/bar/bat", "c:/x/y"), "..\\..\\foo\\bar\\bat")
   test.strings(path.relpath("//conky/mountpoint/a", "//conky/mountpoint/b/c"), "..\\..\\a")

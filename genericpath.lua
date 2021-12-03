@@ -34,10 +34,4 @@ function module.getcwd()
   return pandoc.system.get_working_directory()
 end
 
--- --- Fake getcwd for testing
--- --- Just uncomment this function while testing
--- function module.getcwd()
---   return [[D:\Programming\lua-path]]
--- end
-
 return module
