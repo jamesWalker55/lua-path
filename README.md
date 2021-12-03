@@ -6,7 +6,7 @@ This is a partial port of Python's `os.path` module to Lua, **for usage in Pando
 -- running on windows, linux is supported too
 -- working directory is D:\foo\bar
 
-local path = require("path")
+local path = require("lua-path.path")
 
 path.relpath("relative", "../asd")
 --> "..\bar\relative"
