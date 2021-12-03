@@ -3,6 +3,7 @@
 local util = require("util")
 local common = require("genericpath")
 
+local getcwd = common.getcwd
 local contains = util.contains
 
 local module = {}
@@ -125,6 +126,76 @@ end
 --- Test whether a path is absolute
 function module.isabs(s)
   return s:sub(1, 1) == "/"
+end
+
+--- Return an absolute path.
+--- @param path string
+function module.abspath(path)
+  if not module.isabs(path) then
+    local cwd = getcwd()
+    path = module.join(cwd, path)
+  end
+  return module.normpath(path)
+end
+
+--- Normalize case of pathname.  Has no effect under Posix
+--- @param s string
+function module.normcase(s)
+  return s
+end
+
+--- Return a relative version of a path
+--- @param path string
+--- @param start string|nil
+function module.relpath(path, start)
+  if #path == 0 then
+    return nil, "Given path is empty!"
+  end
+
+  if start == nil then
+    start = "."
+  end
+
+  start = module.abspath(start)
+  path = module.abspath(path)
+
+  local start_list = {}
+  for _, p in ipairs(util.split(start, "[^/]*")) do
+    if #p > 0 then
+      table.insert(start_list, p)
+    end
+  end
+
+  local path_list = {}
+  for _, p in ipairs(util.split(path, "[^/]*")) do
+    if #p > 0 then
+      table.insert(path_list, p)
+    end
+  end
+
+  -- Work out how much of the filepath is shared by start and path.
+  local i = 1
+  for k = 1, math.min(#start_list, #path_list) do
+    if start_list[k] ~= path_list[k] then
+      break
+    end
+    i = k + 1
+  end
+
+  local rel_list = {}
+  for j = 1, #start_list - i + 1 do
+    rel_list[j] = ".."
+  end
+  local j = #rel_list + 1
+  for k = i, #path_list do
+    rel_list[j] = path_list[k]
+    j = j + 1
+  end
+
+  if #rel_list == 0 then
+    return "."
+  end
+  return module.join(table.unpack(rel_list))
 end
 
 return module
