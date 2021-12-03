@@ -27,4 +27,17 @@ function module.splitext(p, sep, altsep, extsep)
   return p, ""
 end
 
+--- Get the current working directory
+--- There is no native function to do this, you MUST use an external library for this
+function module.getcwd()
+  assert(pandoc ~= nil, "#getcwd is only supported in a Pandoc environment")
+  return pandoc.system.get_working_directory()
+end
+
+-- --- Fake getcwd for testing
+-- --- Just uncomment this function while testing
+-- function module.getcwd()
+--   return [[D:\Programming\lua-path]]
+-- end
+
 return module
