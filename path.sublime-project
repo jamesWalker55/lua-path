@@ -15,4 +15,17 @@
 			}
 		}
 	},
+	"build_systems": [
+		{
+			"name": "Project: Lua (cwd parent folder)",
+			"cmd": [
+				"lua",
+				"$file"
+			],
+			// better file regex to find more traceback lines
+			"file_regex": "(?:lua:|    )[ \t]?(...*?):([0-9]*):?([0-9]*)",
+			"selector": "source.lua",
+			"working_dir": "$folder/.."
+		}
+	]
 }
