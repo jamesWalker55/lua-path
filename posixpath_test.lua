@@ -1,3 +1,11 @@
+-- override current directory function for testing
+local genericpath = require("genericpath")
+local cwd_path = [[/home/user/bar]]
+local cwd_dir = [[bar]]
+genericpath.getcwd = function()
+  return cwd_path
+end
+
 local path = require("posixpath")
 local test = require("test")
 
@@ -57,8 +65,30 @@ function test_isabs()
   test.bool(path.isabs("foo/bar"), false)
 end
 
+function test_relpath()
+  test.equal(path.relpath(""), nil)
+  test.strings(path.relpath("a"), "a")
+  test.strings(path.relpath(path.abspath("a")), "a")
+  test.strings(path.relpath("a/b"), "a/b")
+  test.strings(path.relpath("../a/b"), "../a/b")
+  test.strings(path.relpath("a", "../b"), "../" .. cwd_dir .. "/a")
+  test.strings(path.relpath("a/b", "../c"), "../" .. cwd_dir .. "/a/b")
+  test.strings(path.relpath("a", "b/c"), "../../a")
+  test.strings(path.relpath("a", "a"), ".")
+  test.strings(path.relpath("/foo/bar/bat", "/x/y/z"), "../../../foo/bar/bat")
+  test.strings(path.relpath("/foo/bar/bat", "/foo/bar"), "bat")
+  test.strings(path.relpath("/foo/bar/bat", "/"), "foo/bar/bat")
+  test.strings(path.relpath("/", "/foo/bar/bat"), "../../..")
+  test.strings(path.relpath("/foo/bar/bat", "/x"), "../foo/bar/bat")
+  test.strings(path.relpath("/x", "/foo/bar/bat"), "../../../x")
+  test.strings(path.relpath("/", "/"), ".")
+  test.strings(path.relpath("/a", "/a"), ".")
+  test.strings(path.relpath("/a/b", "/a/b"), ".")
+end
+
 test_join()
 test_splitext()
 test_normpath()
 test_split()
 test_isabs()
+test_relpath()
