@@ -107,15 +107,9 @@ function module.split(p)
   local sep_pos = ({ p:find(".*/") })[2] or 0
   local head, tail = p:sub(1, sep_pos), p:sub(sep_pos + 1)
   if #head > 0 and head ~= ("/"):rep(#head) then
-    -- head = head.rstrip(sep)
-    local stop = #head
-    for i = #head, 1, -1 do
-      if head:sub(i, i) ~= "/" then
-        break
-      end
-      stop = i - 1
-    end
-    head = head:sub(1, stop)
+    -- remove trailing slashes from head, unless it's all slashes
+    -- https://stackoverflow.com/questions/17386792/how-to-implement-string-rfind-in-lua
+    head = head:match("(.*[^/\\])") or head
   end
   return head, tail
 end
