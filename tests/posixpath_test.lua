@@ -1,3 +1,5 @@
+package.path = package.path .. ";../lib/?.lua"
+
 -- override current directory function for testing
 local genericpath = require("genericpath")
 local cwd_path = [[/home/user/bar]]
